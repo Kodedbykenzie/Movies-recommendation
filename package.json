@@ -1,12 +1,17 @@
 {
-  "name": "movie1",
+  "name": "movies-recommendation",
   "version": "1.0.0",
+  "description": "A movie recommendation app",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node script.js",
+    "dev": "nodemon script.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "express": "^4.17.1",
+    "dotenv": "^16.0.0"
+  },
+  "author": "Precious Mozia",
+  "license": "ISC"
 }
+
