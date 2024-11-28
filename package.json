@@ -8,10 +8,10 @@
     "dev": "nodemon script.js"
   },
   "dependencies": {
+    "dotenv": "^16.0.0",
     "express": "^4.17.1",
-    "dotenv": "^16.0.0"
+    "node-fetch": "^3.3.2"
   },
   "author": "Precious Mozia",
   "license": "ISC"
 }
-
