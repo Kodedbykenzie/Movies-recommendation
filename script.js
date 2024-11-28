@@ -1,4 +1,6 @@
-const API_KEY = 'b782d0d22d238aa16b24f5872a8391ac'; // Replace with your TMDb API key
+require('dotenv').config();  // At the top of your JavaScript file
+
+const API_KEY = process.env.API_KEY;  // Use the environment variable for the API key
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -69,3 +71,4 @@ searchButton.addEventListener('click', () => {
 
 // Load popular movies on page load
 getPopularMovies();
+
