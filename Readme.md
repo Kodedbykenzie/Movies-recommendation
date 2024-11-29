@@ -1,208 +1,157 @@
-Here's a detailed example of how you can structure your README file for this assignment. This will cover both the local implementation and the deployment process, including how you hosted your application on Web01 and Web02 servers, and how your load balancer works.
+# Movies Recommendation Application
 
----
+## Overview
 
-# Application Deployment and API Integration
+This Movies Recommendation Application fetches and displays a list of popular movies from **The Movie Database (TMDb) API**. Users can search for movies and view trailers for the selected movies. The app is hosted on two web servers with load balancing for better scalability and performance.
 
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Technologies Used](#technologies-used)
-3. [API Integration](#api-integration)
-4. [Application Features](#application-features)
-5. [Local Setup Instructions](#local-setup-instructions)
-6. [Deployment Instructions](#deployment-instructions)
-7. [Accessing the Application](#accessing-the-application)
-8. [Challenges and Solutions](#challenges-and-solutions)
-9. [Credits](#credits)
+## Features
 
----
+- Displays popular movies fetched from **The Movie Database (TMDb) API**.
+- Allows users to search for movies by title.
+- Users can watch movie trailers directly via YouTube links.
+- The application is deployed on two web servers with a load balancer to handle traffic efficiently.
 
-## Project Overview
+## API Used
 
-This application is a web-based service that allows users to interact with real-time data fetched from an external API. The application serves a meaningful purpose by helping users with [describe the real-world problem it addresses, such as weather forecasting, news aggregation, or financial data]. This project demonstrates the integration of an external API, user interaction via a simple interface, and scalability through a load-balanced architecture.
+- **The Movie Database (TMDb) API**  
+  Base URL: `https://api.themoviedb.org/3`  
+  - **Endpoints Used**:
+    - `GET /movie/popular` - Fetches a list of popular movies.
+    - `GET /search/movie` - Searches for movies based on a query.
+    - `GET /movie/{movieId}/videos` - Fetches trailers for a movie by ID.
+  
+  You can find more about this API and its features in the official documentation: [TMDb API Documentation](https://www.themoviedb.org/documentation/api)
 
----
+## Installation Instructions
 
-## Technologies Used
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Node.js with Express
-- **External API**: [API you used (e.g., OpenWeatherMap, NewsAPI, etc.)]
-- **Web Servers**: Apache/Nginx (for serving the application)
-- **Load Balancer**: HAProxy
-- **Other Tools**: Git, SSH, etc.
+### 1. Clone the repository:
 
----
-
-## API Integration
-
-For this project, I used the [API name] to fetch real-time data that is displayed on the frontend. The API offers endpoints for fetching [specific data your app pulls, e.g., weather data, stock prices, etc.]. 
-
-- **API Documentation**: [Link to the API documentation]
-- **API Key**: The API key is stored securely in environment variables and is never exposed in the repository.
-
-Example of API usage:
-```javascript
-fetch('https://api.example.com/data?api_key=YOUR_API_KEY')
-  .then(response => response.json())
-  .then(data => {
-    // Process the data
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-  });
+```bash
+git clone https://github.com/Kodedbykenzie/Movies-recommendation.git
+cd Movies-recommendation
 ```
 
----
+### 2. Set up environment variables:
 
-## Application Features
+Create a `.env` file in the root directory and add your **TMDb API key** as follows:
 
-- **Real-time Data**: Fetches and displays data from the external API.
-- **User Interaction**: Allows users to filter, search, and sort data according to their needs.
-- **Error Handling**: Graceful handling of API errors and downtime, showing appropriate messages to the user.
-- **Responsiveness**: The application is responsive and works on various devices.
+```plaintext
+API_KEY=your_api_key_here
+```
 
----
+You can obtain your **TMDb API key** by signing up at [TMDb](https://www.themoviedb.org/) and navigating to your account settings.
 
-## Local Setup Instructions
+### 3. Install dependencies:
 
-Follow these steps to run the application locally on your machine.
+```bash
+npm install
+```
 
-### Prerequisites
-- Node.js (v14.x or higher)
-- Git
-- An API key for the external API (store this securely)
+### 4. Run the application locally:
 
-### Installation Steps
+To run the application locally, use the following command:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/your-repository-name.git
-   cd your-repository-name
-   ```
+```bash
+npm start
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file in the root of the project and add your API key:
-   ```
-   API_KEY=your_api_key_here
-   ```
-
-4. Start the local server:
-   ```bash
-   npm start
-   ```
-
-5. Open the application in your browser:
-   ```
-   http://localhost:3000
-   ```
+This will start the app at `http://localhost:3000`.
 
 ---
 
-## Deployment Instructions
+## Deployment
 
-### Deploying on Web Servers (Web01 and Web02)
+The application is deployed on two web servers, Web01 and Web02, with a load balancer (Lb01) managing the traffic between them for better scalability. The web servers are configured to handle incoming requests and serve the application efficiently.
 
-1. SSH into your servers (`Web01` and `Web02`):
-   ```bash
-   ssh user@web01_ip
-   ```
+- **Web01**: `http://54.90.179.62:3000/`
+- **Web02**: `http://18.214.99.45:3000/`
 
-2. Clone the repository on each server:
-   ```bash
-   git clone https://github.com/yourusername/your-repository-name.git
-   cd your-repository-name
-   ```
+### 1. **Web Servers Deployment**
 
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+- We deployed the application on **Web01** and **Web02** using standard web server configurations.
+- Both servers run the application on port `3000`, ensuring consistency across instances.
 
-4. Start the application:
-   ```bash
-   npm start
-   ```
+### 2. **Load Balancer Configuration**
 
-5. Configure Apache or Nginx to serve the application:
-   - For Nginx, modify the configuration to point to port `3000`.
-   - Example Nginx config:
-     ```
-     server {
-         listen 80;
-         server_name web01.example.com;
-         location / {
-             proxy_pass http://localhost:3000;
-         }
-     }
-     ```
+The **Load Balancer (Lb01)** is configured to distribute incoming traffic between the two web servers based on the round-robin method. The load balancer ensures that traffic is evenly distributed, improving the application's reliability and performance.
 
-6. Repeat the steps on `Web02`.
 
-### Configuring the Load Balancer (Lb01)
+**Steps to configure the load balancer:**
+1. Set up the load balancer to forward requests to both Web01 and Web02.
+2. The load balancer uses the round-robin algorithm to direct traffic to both servers.
 
-1. SSH into your load balancer:
-   ```bash
-   ssh user@lb01_ip
-   ```
-
-2. Install HAProxy:
-   ```bash
-   sudo apt-get install haproxy
-   ```
-
-3. Edit the HAProxy configuration file (`/etc/haproxy/haproxy.cfg`):
-   ```haproxy
-   frontend http_front
-       bind *:80
-       default_backend web_servers
-
-   backend web_servers
-       balance roundrobin
-       server web01 web01_ip:80 check
-       server web02 web02_ip:80 check
-   ```
-
-4. Restart HAProxy:
-   ```bash
-   sudo systemctl restart haproxy
-   ```
+Once configured, users can access the application via the load balancer, and requests will be distributed seamlessly between the two servers.
 
 ---
 
-## Accessing the Application
+## How the Application Works
 
-After deploying the application to `Web01`, `Web02`, and configuring the load balancer (`Lb01`), you can access the application at the following URLs:
+### 1. **Fetching Popular Movies**
 
-- **Load Balancer**: [http://54.90.179.62:3000](http://54.90.179.62:3000)
-- **Web01**: [http://54.90.179.62:3000](http://54.90.179.62:3000)
-- **Web02**: [http://18.214.99.45:3000](http://18.214.99.45:3000)
+When the app loads, it fetches a list of popular movies using the **`/movie/popular`** endpoint from the TMDb API:
 
-Both `Web01` and `Web02` should handle traffic, but requests are distributed by the load balancer, ensuring high availability.
+```js
+const url = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+```
+
+This data is displayed in a grid format, including the movie title, poster, and rating.
+
+### 2. **Search for Movies**
+
+Users can search for specific movies by entering a movie name in the search bar. When the search button is clicked, the **`/search/movie`** API endpoint is called with the user's query:
+
+```js
+const url = `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`;
+```
+
+This allows users to find movies based on their search terms.
+
+### 3. **Watch Movie Trailers**
+
+Each movie in the list has a **"Watch Trailer"** button. When clicked, the application fetches the trailer for that specific movie using the **`/movie/{movieId}/videos`** API:
+
+```js
+const url = `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}&language=en-US`;
+```
+
+If a trailer is found, it opens in a new tab.
 
 ---
 
-## Challenges and Solutions
+## How to Access the Application
 
-- **Challenge 1**: API rate limits and handling downtime.
-  - **Solution**: Implemented error handling and retries using JavaScript's `try/catch` blocks to manage API downtime.
-  
-- **Challenge 2**: Configuring the load balancer correctly.
-  - **Solution**: Used the `roundrobin` method for load balancing, ensuring that requests are evenly distributed between `Web01` and `Web02`. I also verified the backend servers' health checks.
+Once deployed, the application is accessible through the following URLs:
+
+- Web Server 1: [http://54.90.179.62:3000](http://54.90.179.62:3000/)
+- Web Server 2: [http://18.214.99.45:3000](http://18.214.99.45:3000/)
+
+---
+
+## Demo Video
+
+Here is a short demo video showcasing how to use the application both locally and through the load balancer. It demonstrates the following:
+
+- How to search for movies.
+- How to view movie details and trailers.
+- How the application is accessible through the load balancer.
+
+[Demo Video](https://www.loom.com/share/b088221b2cf24626a3e8aff72771706c?sid=6f508820-2e59-4f9b-9c2e-38d5b1a4341c)
+
+---
+
+## Challenges Faced
+
+During the development of this application, the following challenges were encountered:
+
+1. **Handling API Rate Limits**: TMDb API has rate limits, and managing these efficiently was critical for the app's stability.
+2. **Server Deployment**: Configuring the load balancer to distribute traffic between the two web servers was a learning curve.
+3. **Handling API Errors**: I implemented error handling to manage scenarios such as API downtime or invalid responses.
 
 ---
 
 ## Credits
 
-- **API Used**: [Name of the API]
-  - Documentation: [Link to the API documentation]
-- **Node.js**: [Link to Node.js website](https://nodejs.org/)
-- **Nginx/Apache**: [Link to the Nginx documentation](https://nginx.org/) / [Link to Apache documentation](https://httpd.apache.org/)
+- **TMDb API**: [The Movie Database API](https://www.themoviedb.org/documentation/api) for providing the movie data.
+- **Web Hosting**: Deployed on AWS EC2 instances Web01 and Web02, with a load balancer (Lb01) to handle traffic.
 
 ---
-
-By following these instructions, you should be able to successfully deploy and run the application both locally and on your web servers with load balancing. If you have any questions or encounter any issues, feel free to reach out for further assistance.
-
